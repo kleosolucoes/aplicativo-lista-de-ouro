@@ -1,5 +1,5 @@
 import React from 'react';
-import { createStackNavigator, createMaterialTopTabNavigator } from 'react-navigation';
+import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 import ProspectosScreen from '../screens/ProspectosScreen';
 import ImportarProspectosScreen from '../screens/ImportarProspectosScreen';
 import QualificarProspectoScreen from '../screens/QualificarProspectoScreen';

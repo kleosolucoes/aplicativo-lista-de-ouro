@@ -16,7 +16,7 @@ import { Permissions, Contacts } from 'expo'
 import {
 	adicionarProspectosAoAsyncStorage,
 } from '../actions'
-import { white, red, lightdark, gray, dark, black } from '../helpers/colors'
+import { white, blue, lightdark, gray, dark, black } from '../helpers/colors'
 import { SITUACAO_MENSAGEM } from '../helpers/constants'
 import styles from '../components/ProspectoStyle';
 import { LinearGradient } from 'expo'
@@ -27,7 +27,7 @@ class MyListItem extends React.PureComponent {
 	};
 
 	render() {
-		const textColor = this.props.selected ? red : white;
+		const textColor = this.props.selected ? blue : white;
 		return (
 			<TouchableOpacity style={{ padding: 20, borderBottomWidth: 1, borderColor: gray, backgroundColor: lightdark }} onPress={this._onPress}>
 				<View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -237,7 +237,7 @@ class ImportarProspectosScreen extends React.Component {
 					<View style={{ flex: 1, justifyContent: 'center' }}>
 						<ActivityIndicator
 							size="large"
-							color={red}
+							color={blue}
 						/>
 					</View>
 				}

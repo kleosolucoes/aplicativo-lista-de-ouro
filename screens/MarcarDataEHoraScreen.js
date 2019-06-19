@@ -9,11 +9,11 @@ import {
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { LinearGradient } from 'expo'
-import { white, dark, red, lightdark, gray, black } from '../helpers/colors'
+import { white, dark, blue, lightdark, gray, black } from '../helpers/colors'
 import { connect } from 'react-redux'
 import DatePicker from 'react-native-datepicker'
 import { alterarProspectoNoAsyncStorage } from '../actions'
-import { SITUACAO_LIGAR, SITUACAO_VISITAR, SITUACAO_FECHAMENTO } from '../helpers/constants'
+import { SITUACAO_LIGAR, SITUACAO_VISITAR, } from '../helpers/constants'
 
 class MarcarDataEHoraScreen extends React.Component {
 
@@ -38,13 +38,11 @@ class MarcarDataEHoraScreen extends React.Component {
 				case SITUACAO_VISITAR:
 					textoMarcouUmaApresentacao = 'Visita marcada!'
 					break;
-				case SITUACAO_FECHAMENTO:
-					textoMarcouUmaApresentacao = 'Você remarcou, agora seu prospecto está na etapa "Fechamento"'
-					break;
 			}
 			Alert.alert('Sucesso', textoMarcouUmaApresentacao)
 			if (situacao_id === SITUACAO_VISITAR) {
 				navigation.navigate('Prospectos')
+				// navigation.navigate('Apresentar')
 			} else {
 				navigation.goBack()
 			}
@@ -210,7 +208,7 @@ const styles = StyleSheet.create({
 		marginTop: 10,
 	},
 	button: {
-		backgroundColor: red,
+		backgroundColor: blue,
 		height: 45,
 		borderRadius: 6,
 		justifyContent: 'center',

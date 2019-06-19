@@ -24,7 +24,7 @@ import {
 } from '../actions'
 import { connect } from 'react-redux'
 import { LinearGradient } from 'expo'
-import { dark, lightdark, red, white, gray, black } from '../helpers/colors';
+import { dark, lightdark, blue, white, gray, black } from '../helpers/colors';
 
 class ListaDeProspectos extends React.Component {
 

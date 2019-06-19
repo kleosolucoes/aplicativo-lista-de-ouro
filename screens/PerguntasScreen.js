@@ -3,14 +3,17 @@ import {
 	View,
 	Text,
 	Alert,
+	TouchableOpacity,
 } from 'react-native';
 import { Button, Card, Icon, Input, CheckBox } from 'react-native-elements'
-import { white, gray, black, lightdark, dark, red } from '../helpers/colors'
+import { white, gray, black, lightdark, dark, blue } from '../helpers/colors'
 import { connect } from 'react-redux'
-import { SITUACAO_VISITAR, SITUACAO_FECHADO, SITUACAO_FECHAMENTO, SITUACAO_ARENA } from '../helpers/constants'
+import { SITUACAO_VISITAR, SITUACAO_FECHADO, SITUACAO_FECHAMENTO, SITUACAO_ARENA, SITUACAO_MENSAGEM, SITUACAO_LIGAR } from '../helpers/constants'
 import { alterarProspectoNoAsyncStorage } from '../actions'
 import { LinearGradient } from 'expo'
 import LOButton from '../components/LOButton';
+import styles from '../components/ProspectoStyle';
+import MarcarDataEHoraScreen from './MarcarDataEHoraScreen';
 
 class PerguntasScreen extends React.Component {
 
@@ -32,12 +35,16 @@ class PerguntasScreen extends React.Component {
 		naoFechouFicha: false,
 	}
 
+	setModalVisible(visible) {
+		this.setState({ modalVisible: visible })
+	}
+
 	alterarProspecto() {
 		const { prospecto, alterarProspectoNoAsyncStorage, navigation } = this.props
 		prospecto.situacao_id = SITUACAO_ARENA
 		alterarProspectoNoAsyncStorage(prospecto)
-		Alert.alert('Sucesso', 'Vamo pra cima!')
 		navigation.goBack()
+		Alert.alert('Sucesso', 'Vamo pra cima!')
 	}
 	fecharFicha() {
 		const { prospecto, alterarProspectoNoAsyncStorage, navigation } = this.props
@@ -47,15 +54,225 @@ class PerguntasScreen extends React.Component {
 		navigation.goBack()
 	}
 
+	alterar = (tipo) => {
+		const {
+			alterarProspectoNoAsyncStorage,
+
+			navigation,
+			prospecto,
+		} = this.props
+
+		if (tipo === 'remover') {
+			prospecto.situacao_id = SITUACAO_REMOVIDO
+			navigation.goBack()
+		}
+		if (tipo === 'sim') {
+			prospecto.situacao_id = SITUACAO_LIGAR
+			// navigation.goBack()
+			navigation.navigate('Prospectos', { situacao_id: prospecto.situacao_id })
+		}
+		else {
+			navigation.goBack()
+		}
+
+		alterarProspectoNoAsyncStorage(prospecto)
+
+		if (tipo === 'remover') {
+			Alert.alert('Removido', 'removido!')
+		}
+		else if (tipo === 'sim') {
+			Alert.alert('Ótimo!', 'Consolidação foi para o próximo passo.')
+		}
+
+	}
+
+	marcarDataEHora = () => {
+		const {
+			alterarProspectoNoAsyncStorage,
+			navigation,
+			prospecto
+		} = this.props
+
+		alterarProspectoNoAsyncStorage(prospecto)
+
+		navigation.navigate('MarcarDataEHora', { prospecto_id: prospecto.id, situacao_id: SITUACAO_VISITAR })
+	}
+
 	render() {
+
 		const { prospecto, navigation } = this.props
 		const { foiVisitado, naoFoiVisitado, vaiProArena, naoVaiProArena, foiProArena, naoFoiProArena, fechouFicha, naoFechouFicha } = this.state
 
 		return (
 			<LinearGradient style={{ flex: 1 }} colors={[black, dark, lightdark, '#343434']}>
 				<View style={{ flex: 1, padding: 20 }}>
+
+					{prospecto.situacao_id === SITUACAO_MENSAGEM &&
+
+						<Card containerStyle={{ backgroundColor: dark, borderColor: blue, borderRadius: 6 }}>
+							<Text style={{
+								color: white, textAlign: 'center', fontWeight: 'bold',
+								paddingBottom: 8
+							}}
+							>
+								Mensagem foi enviada?
+							</Text>
+							<View style={{ backgroundColor: lightdark, height: 110, marginTop: 20, justifyContent: 'flex-start', alignItems: 'flex-start' }}>
+								<CheckBox
+									title='Sim'
+									checked={this.state.enviou}
+									onPress={() => this.setState({
+										enviou: true,
+										ligou: false,
+										naoLigou: false,
+										pendente: false,
+									})}
+									checkedIcon='dot-circle-o'
+									uncheckedIcon='circle-o'
+									checkedColor={blue}
+									textStyle={{ color: white }}
+									containerStyle={{ backgroundColor: 'transparent', borderWidth: 0 }}
+								/>
+								<CheckBox
+									title='Não'
+									checked={this.state.pendente}
+									onPress={() => this.setState({
+										enviou: false,
+										ligou: false,
+										naoLigou: false,
+										pendente: true,
+									})}
+									checkedIcon='dot-circle-o'
+									uncheckedIcon='circle-o'
+									checkedColor={blue}
+									textStyle={{ color: white }}
+									containerStyle={{ backgroundColor: 'transparent', borderWidth: 0 }}
+								/>
+							</View>
+
+							<View style={{ backgroundColor: dark, height: 40, marginTop: 20, justifyContent: 'flex-end', marginLeft: -15, marginRight: -15, marginBottom: -15 }}>
+								{
+									this.state.ligou &&
+									<TouchableOpacity
+										hitSlop={{ top: 15, right: 15, bottom: 15, left: 15 }}
+										style={[styles.button, style = { height: 40, borderRadius: 0, backgroundColor: blue }]}
+										onPress={() => { this.marcarDataEHora() }}>
+										<Text style={styles.textButton}>Marcar Apresentação</Text>
+									</TouchableOpacity>
+								}
+								{
+									this.state.naoLigou &&
+									<TouchableOpacity
+										hitSlop={{ top: 15, right: 15, bottom: 15, left: 15 }}
+										style={[styles.button, style = { height: 40, borderRadius: 0, backgroundColor: blue }]}
+										onPress={() => { this.alterar('remover') }}>
+										<Text style={styles.textButton}>Remover</Text>
+									</TouchableOpacity>
+								}
+								{
+									this.state.enviou &&
+									<TouchableOpacity
+										hitSlop={{ top: 15, right: 15, bottom: 15, left: 15 }}
+										style={[styles.button, style = { height: 40, borderRadius: 0, backgroundColor: blue }]}
+										onPress={() => { this.alterar('sim') }}>
+										<Text style={styles.textButton}>OK</Text>
+									</TouchableOpacity>
+								}
+								{
+									this.state.pendente &&
+									<TouchableOpacity
+										hitSlop={{ top: 15, right: 15, bottom: 15, left: 15 }}
+										style={[styles.button, style = { height: 40, borderRadius: 0, backgroundColor: blue }]}
+										onPress={() => { this.alterar() }}>
+										<Text style={styles.textButton}>Voltar</Text>
+									</TouchableOpacity>
+								}
+							</View>
+
+						</Card>
+
+					}
+
+					{prospecto.situacao_id === SITUACAO_LIGAR &&
+
+						<Card containerStyle={{ backgroundColor: dark, borderColor: blue, borderRadius: 6 }}>
+							<Text style={{
+								color: white, textAlign: 'center', fontWeight: 'bold',
+								paddingBottom: 8
+							}}
+							>
+								Atendeu?
+							</Text>
+							<View style={{ backgroundColor: lightdark, height: 110, marginTop: 20, justifyContent: 'flex-start', alignItems: 'flex-start' }}>
+								<CheckBox
+									title='Sim'
+									checked={this.state.ligou}
+									onPress={() => this.setState({
+										ligou: true,
+										naoLigou: false,
+										pendente: false,
+									})}
+									checkedIcon='dot-circle-o'
+									uncheckedIcon='circle-o'
+									checkedColor={blue}
+									textStyle={{ color: white }}
+									containerStyle={{ backgroundColor: 'transparent', borderWidth: 0 }}
+								/>
+								<CheckBox
+									title='Não'
+									checked={this.state.pendente}
+									onPress={() => this.setState({
+										ligou: false,
+										naoLigou: false,
+										pendente: true,
+									})}
+									checkedIcon='dot-circle-o'
+									uncheckedIcon='circle-o'
+									checkedColor={blue}
+									textStyle={{ color: white }}
+									containerStyle={{ backgroundColor: 'transparent', borderWidth: 0 }}
+								/>
+							</View>
+
+							<View style={{ backgroundColor: dark, height: 40, marginTop: 20, justifyContent: 'flex-end', marginLeft: -15, marginRight: -15, marginBottom: -15 }}>
+								{
+									this.state.ligou &&
+									<TouchableOpacity
+										hitSlop={{ top: 15, right: 15, bottom: 15, left: 15 }}
+										style={[styles.button, style = { height: 40, borderRadius: 0, backgroundColor: blue }]}
+										onPress={() => {
+											navigation.goBack()
+											this.marcarDataEHora()
+											// this.setModalVisible(true)
+										}}>
+										<Text style={styles.textButton}>Marcar visita</Text>
+									</TouchableOpacity>
+								}
+								{
+									this.state.naoLigou &&
+									<TouchableOpacity
+										hitSlop={{ top: 15, right: 15, bottom: 15, left: 15 }}
+										style={[styles.button, style = { height: 40, borderRadius: 0, backgroundColor: blue }]}
+										onPress={() => { this.alterar('remover') }}>
+										<Text style={styles.textButton}>Remover</Text>
+									</TouchableOpacity>
+								}
+								{
+									this.state.pendente &&
+									<TouchableOpacity
+										hitSlop={{ top: 15, right: 15, bottom: 15, left: 15 }}
+										style={[styles.button, style = { height: 40, borderRadius: 0, backgroundColor: blue }]}
+										onPress={() => { this.alterar() }}>
+										<Text style={styles.textButton}>Ligar depois</Text>
+									</TouchableOpacity>
+								}
+							</View>
+
+						</Card>
+					}
+
 					{prospecto.situacao_id == SITUACAO_VISITAR &&
-						<Card containerStyle={{ backgroundColor: dark, borderColor: red, borderRadius: 6, margin: 0, marginBottom: 10 }}>
+						<Card containerStyle={{ backgroundColor: dark, borderColor: blue, borderRadius: 6, margin: 0, marginBottom: 10 }}>
 
 							<Text style={{ color: white, textAlign: 'center', fontWeight: 'bold', paddingBottom: 8 }}>
 								Foi visitado?
@@ -70,7 +287,7 @@ class PerguntasScreen extends React.Component {
 										naoFoiVisitado: false,
 									})}
 									checkedIcon='dot-circle-o'
-									checkedColor={red}
+									checkedColor={blue}
 									uncheckedIcon='circle-o'
 									containerStyle={{
 										backgroundColor: 'transparent',
@@ -87,7 +304,7 @@ class PerguntasScreen extends React.Component {
 										vaiProArena: false
 									})}
 									checkedIcon='dot-circle-o'
-									checkedColor={red}
+									checkedColor={blue}
 									uncheckedIcon='circle-o'
 									containerStyle={{
 										backgroundColor: 'transparent',
@@ -99,12 +316,12 @@ class PerguntasScreen extends React.Component {
 					}
 					{
 						foiVisitado &&
-						<Card containerStyle={{ backgroundColor: dark, borderColor: red, margin: 0 }}>
+						<Card containerStyle={{ backgroundColor: dark, borderColor: blue, margin: 0 }}>
 							<Text style={{
 								color: white, textAlign: 'center',
 								fontWeight: 'bold', paddingBottom: 8
 							}}>
-								Vai a célula/culto?
+								Confirmou a célula/culto?
 							</Text>
 							<View style={{ flexDirection: 'row', backgroundColor: lightdark, height: 50, justifyContent: 'center', alignItems: 'center' }}>
 								<CheckBox
@@ -116,7 +333,7 @@ class PerguntasScreen extends React.Component {
 										naoVaiProArena: false,
 									})}
 									checkedIcon='dot-circle-o'
-									checkedColor={red}
+									checkedColor={blue}
 									uncheckedIcon='circle-o'
 									containerStyle={{
 										backgroundColor: 'transparent',
@@ -132,7 +349,7 @@ class PerguntasScreen extends React.Component {
 										naoVaiProArena: true,
 									})}
 									checkedIcon='dot-circle-o'
-									checkedColor={red}
+									checkedColor={blue}
 									uncheckedIcon='circle-o'
 									containerStyle={{
 										backgroundColor: 'transparent',
@@ -146,7 +363,7 @@ class PerguntasScreen extends React.Component {
 					{
 						foiVisitado && vaiProArena &&
 						<LOButton
-							title="Confirmar Célula/Culto"
+							title="OK"
 							OnPress={() => { this.alterarProspecto() }}
 						/>
 					}
@@ -166,7 +383,7 @@ class PerguntasScreen extends React.Component {
 					}
 
 					{prospecto.situacao_id == SITUACAO_ARENA &&
-						<Card containerStyle={{ backgroundColor: dark, borderColor: red, borderRadius: 6, margin: 0, marginBottom: 10 }}>
+						<Card containerStyle={{ backgroundColor: dark, borderColor: blue, borderRadius: 6, margin: 0, marginBottom: 10 }}>
 
 							<Text style={{ color: white, textAlign: 'center', fontWeight: 'bold', paddingBottom: 8 }}>
 								Foi ao arena/célula?
@@ -181,7 +398,7 @@ class PerguntasScreen extends React.Component {
 										naoFoiProArena: false,
 									})}
 									checkedIcon='dot-circle-o'
-									checkedColor={red}
+									checkedColor={blue}
 									uncheckedIcon='circle-o'
 									containerStyle={{
 										backgroundColor: 'transparent',
@@ -199,7 +416,7 @@ class PerguntasScreen extends React.Component {
 										naoFechouFicha: false,
 									})}
 									checkedIcon='dot-circle-o'
-									checkedColor={red}
+									checkedColor={blue}
 									uncheckedIcon='circle-o'
 									containerStyle={{
 										backgroundColor: 'transparent',
@@ -211,7 +428,7 @@ class PerguntasScreen extends React.Component {
 					}
 					{
 						foiProArena &&
-						<Card containerStyle={{ backgroundColor: dark, borderColor: red, margin: 0 }}>
+						<Card containerStyle={{ backgroundColor: dark, borderColor: blue, margin: 0 }}>
 							<Text style={{
 								color: white, textAlign: 'center',
 								fontWeight: 'bold', paddingBottom: 8
@@ -229,7 +446,7 @@ class PerguntasScreen extends React.Component {
 
 									})}
 									checkedIcon='dot-circle-o'
-									checkedColor={red}
+									checkedColor={blue}
 									uncheckedIcon='circle-o'
 									containerStyle={{
 										backgroundColor: 'transparent',
@@ -247,7 +464,7 @@ class PerguntasScreen extends React.Component {
 
 									})}
 									checkedIcon='dot-circle-o'
-									checkedColor={red}
+									checkedColor={blue}
 									uncheckedIcon='circle-o'
 									containerStyle={{
 										backgroundColor: 'transparent',
@@ -260,7 +477,7 @@ class PerguntasScreen extends React.Component {
 					{
 						foiProArena && fechouFicha &&
 						<LOButton
-							title="Confirmar Ficha do Pré"
+							title="OK"
 							OnPress={() => { this.fecharFicha() }}
 						/>
 					}
@@ -279,9 +496,6 @@ class PerguntasScreen extends React.Component {
 							OnPress={() => { navigation.goBack() }}
 						/>
 					}
-
-
-
 
 				</View>
 			</LinearGradient>

@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { Input } from 'react-native-elements'
-import { dark, white, black, red, lightdark, gray } from '../helpers/colors';
+import { dark, white, black, blue, lightdark, gray } from '../helpers/colors';
 import { Icon } from 'native-base';
 import {
 	registrarNaAPI,
@@ -156,7 +156,7 @@ class RegistroScreen extends React.Component {
 						<View style={{ flex: 1, justifyContent: 'center' }}>
 							<ActivityIndicator
 								size="large"
-								color={red}
+								color={blue}
 							/>
 						</View>
 					}

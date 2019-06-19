@@ -5,7 +5,7 @@ import {
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { Input } from 'react-native-elements'
-import { white, lightdark, dark, red, gray, black } from '../helpers/colors'
+import { white, lightdark, dark, blue, gray, black } from '../helpers/colors'
 import {
 	alterarProspectoNoAsyncStorage,
 } from '../actions'

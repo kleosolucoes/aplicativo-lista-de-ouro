@@ -7,7 +7,7 @@ import {
 	StyleSheet
 } from 'react-native';
 import { AirbnbRating } from 'react-native-ratings'
-import { white, lightdark, dark, gray, red, black } from '../helpers/colors'
+import { white, lightdark, dark, gray, blue, black } from '../helpers/colors'
 import { connect } from 'react-redux'
 import { alterarProspectoNoAsyncStorage } from '../actions'
 import {LinearGradient} from 'expo'
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
 		paddingVertical: 6,
 	},
 	button: {
-		backgroundColor: red,
+		backgroundColor: blue,
 		height: 45,
 		borderRadius: 6,
 		justifyContent: 'center',

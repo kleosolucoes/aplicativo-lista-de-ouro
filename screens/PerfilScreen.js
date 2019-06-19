@@ -5,8 +5,8 @@ import { connect } from 'react-redux'
 
 import { LinearGradient } from 'expo'
 import { Card, Icon } from 'react-native-elements';
-import SITUACAO_VISITAR, { SITUACAO_REMOVIDO } from '../helpers/constants'
-import { white, lightdark, dark, red, gray, black } from '../helpers/colors'
+import SITUACAO_VISITAR, { SITUACAO_REMOVIDO, SITUACAO_FECHADO, SITUACAO_ARENA } from '../helpers/constants'
+import { white, lightdark, dark, blue, gray, black } from '../helpers/colors'
 
 import {
     LineChart,
@@ -18,7 +18,7 @@ import {
 
 
 const Apn = ({ prospectos }) => (
-    <Text style={styles.number}> {prospectos.length > 0 ? prospectos.length -1 : prospectos.length} </Text>
+    <Text style={styles.number}> {prospectos.length} </Text>
 );
 
 class PerfilScreen extends React.Component {
@@ -70,8 +70,8 @@ class PerfilScreen extends React.Component {
                     <Text style={[styles.text]}>{usuario.email}</Text>
                 </View>
 
-                <View style={{ flex: 1, justifyContent: 'space-around' }}>
-                    <View style={{ flexDirection: 'row', justifyContent: 'center', marginBottom: 10, }}>
+                <View style={{ flex: 1, justifyContent: 'space-around', }}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'center', marginBottom: 10, flexWrap: 'wrap'}}>
                         <Card containerStyle={styles.box}>
                             <Icon name="user" type="font-awesome" size={20} color={white} containerStyle={{ margin: 0 }} />
                             <Text style={styles.number}>
@@ -82,13 +82,18 @@ class PerfilScreen extends React.Component {
                         </Card>
                         <Card containerStyle={[styles.box, { marginHorizontal: 0 }]}>
                             <Icon name="info-circle" type="font-awesome" size={20} color={white} containerStyle={{ margin: 0 }} />
-                            <Apn prospectos={prospectos.filter(prospecto => prospecto.situacao_id === 4)} />
+                            <Apn prospectos={prospectos.filter(prospecto => prospecto.situacao_id === SITUACAO_VISITAR)} />
                             <Text style={styles.text}>Visitas</Text>
                         </Card>
                         <Card containerStyle={styles.box}>
                             <Icon name="trophy" type="font-awesome" size={20} color={white} containerStyle={{ margin: 0 }} />
-                            <Apn prospectos={prospectos.filter(prospecto => prospecto.situacao_id === 5)} />
+                            <Apn prospectos={prospectos.filter(prospecto => prospecto.situacao_id === SITUACAO_ARENA)} />
                             <Text style={styles.text}>C / C</Text>
+                        </Card>
+                        <Card containerStyle={styles.box}>
+                            <Icon name="trophy" type="font-awesome" size={20} color={white} containerStyle={{ margin: 0 }} />
+                            <Apn prospectos={prospectos.filter(prospecto => prospecto.situacao_id === SITUACAO_FECHADO)} />
+                            <Text style={styles.text}>Fichas</Text>
                         </Card>
                     </View>
 
@@ -150,7 +155,7 @@ const styles = StyleSheet.create({
         paddingTop: Dimensions.get('window').height < 680 ? 0 : 15,
     },
     box: {
-        backgroundColor: red,
+        backgroundColor: blue,
         width: Dimensions.get('window').height < 650 ? 90 : 110,
         justifyContent: 'center',
         alignItems: 'center',

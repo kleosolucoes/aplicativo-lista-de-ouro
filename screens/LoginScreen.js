@@ -8,7 +8,7 @@ import {
     NetInfo,
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { dark, white, gray, red, lightdark, black } from '../helpers/colors';
+import { dark, white, gray, blue, lightdark, black } from '../helpers/colors';
 import { Icon } from 'native-base';
 import { LinearGradient } from 'expo'
 import {
@@ -116,7 +116,7 @@ class LoginScreen extends React.Component {
                         <View style={{ flex: 1, justifyContent: 'center' }}>
                             <ActivityIndicator
                                 size="large"
-                                color={red}
+                                color={blue}
                             />
                         </View>
                     }
@@ -250,7 +250,7 @@ const styles = StyleSheet.create({
         marginBottom: 6,
     },
     button: {
-        backgroundColor: red,
+        backgroundColor: blue,
         height: 40,
         borderRadius: 10,
         justifyContent: 'center',

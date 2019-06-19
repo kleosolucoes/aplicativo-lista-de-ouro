@@ -7,7 +7,7 @@ import {
     StyleSheet
 } from 'react-native';
 
-import { red, white } from '../helpers/colors'
+import { blue, white } from '../helpers/colors'
 
 const LOButton = ({ OnPress, title }) => (
     <View style={styles.containerButton}>
@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     button: {
-        backgroundColor: red,
+        backgroundColor: blue,
         height: 45,
         borderRadius: 6,
         justifyContent: 'center',

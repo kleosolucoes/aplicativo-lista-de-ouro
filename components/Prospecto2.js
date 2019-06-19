@@ -5,11 +5,9 @@ import {
 	Alert,
 	TouchableOpacity,
 	Linking,
-	Image,
-	Platform
 } from 'react-native';
 import { Card, Icon } from 'react-native-elements'
-import { white, red, dark, gray } from '../helpers/colors'
+import { white, blue, dark, gray } from '../helpers/colors'
 import call from 'react-native-phone-call'
 import email from 'react-native-email'
 import {
@@ -55,32 +53,21 @@ class Prospecto2 extends React.Component {
 	}
 
 	chamarOTelefoneDoCelular() {
-		const { prospecto, alterarAdministracao, alterarProspectoNoAsyncStorage } = this.props
-		let { administracao } = this.props
-		administracao.ligueiParaAlguem = true
-		administracao.prospectoSelecionado = prospecto
-		alterarAdministracao(administracao)
-		prospecto.ligueiParaAlguem = true
-		alterarProspectoNoAsyncStorage(prospecto)
+		const { prospecto, navigation } = this.props
+
+		navigation.navigate('Perguntas', { prospecto_id: prospecto.id })
 		call({ number: prospecto.telefone, prompt: false }).catch(console.error)
 	}
 	whatsapp() {
-		const { prospecto, alterarAdministracao, alterarProspectoNoAsyncStorage } = this.props
-		let { administracao } = this.props
-		administracao.mandeiWhatsapp = true
-		administracao.prospectoSelecionado = prospecto
-		alterarAdministracao(administracao)
-		prospecto.mandeiWhatsapp = true
-		alterarProspectoNoAsyncStorage(prospecto)
+		const { prospecto, navigation } = this.props
+
+		navigation.navigate('Perguntas', { prospecto_id: prospecto.id })
 		Linking.openURL(`https://api.whatsapp.com/send?phone=55${prospecto.ddd}${prospecto.telefone}`).catch((err) => console.error(err))
 	}
 	handleEmail = () => {
 		const { prospecto } = this.props
 		const to = prospecto.email // string or array of email addresses
 		email(to, {
-			// Optional additional arguments
-			// cc: ['bazzy@moo.com', 'doooo@daaa.com'], // string or array of email addresses
-			// bcc: 'mee@mee.com', // string or array of email addresses
 			subject: '',
 			body: 'Lista de Ouro App'
 		}).catch(console.error)
@@ -99,7 +86,7 @@ class Prospecto2 extends React.Component {
 					flexDirection: 'row',
 					alignItems: 'center',
 					justifyContent: 'flex-start',
-					backgroundColor: red,
+					backgroundColor: blue,
 					paddingLeft: 30,
 				}}
 			>
@@ -111,7 +98,7 @@ class Prospecto2 extends React.Component {
 					flexDirection: 'row',
 					alignItems: 'center',
 					justifyContent: 'flex-start',
-					backgroundColor: red,
+					backgroundColor: blue,
 					paddingLeft: 30,
 				}}
 				onPress={() => { this.removerProspecto() }} >
@@ -131,7 +118,7 @@ class Prospecto2 extends React.Component {
 							prospecto.data && prospecto.situacao_id === SITUACAO_VISITAR &&
 							<View style={styles.date}>
 								<View style={{
-									borderRadius: 9, backgroundColor: red, borderWidth: 0,
+									borderRadius: 9, backgroundColor: blue, borderWidth: 0,
 									paddingHorizontal: 4, paddingVertical: 2
 								}}>
 									<Text style={{ color: white, fontSize: 12 }}>
@@ -152,11 +139,11 @@ class Prospecto2 extends React.Component {
 									<Icon
 										name='star'
 										size={34}
-										color={red}
+										color={blue}
 										type='font-awesome'
 										containerStyle={{ marginRight: 6 }}
 									/>
-									<Text style={{ position: "absolute", left: 11.5, top: 9, color: dark, fontWeight: 'bold' }}>{prospecto.rating}</Text>
+									<Text style={{ position: "absolute", left: 11.4, top: 9, color: white, fontWeight: 'bold' }}>{prospecto.rating}</Text>
 								</View>
 
 								<Text style={[styles.text, style = { fontWeight: 'bold' }]}>{prospecto.nome}</Text>
@@ -167,44 +154,36 @@ class Prospecto2 extends React.Component {
 						<View style={{ flexDirection: 'row' }}>
 							{
 								prospecto.situacao_id === SITUACAO_MENSAGEM &&
-								<View style={{ backgroundColor: 'transparent', padding: 4, borderRadius: 4, marginLeft: 3, flexDirection: 'row' }}>
-									<TouchableOpacity style={{ flexDirection: "row" }} onPress={() => {
-										const { prospecto, alterarAdministracao, alterarProspectoNoAsyncStorage } = this.props
-										let { administracao } = this.props
-										administracao.mandeiWhatsapp = true
-										administracao.prospectoSelecionado = prospecto
-										alterarAdministracao(administracao)
-										prospecto.mandeiWhatsapp = true
-										alterarProspectoNoAsyncStorage(prospecto)
-									}
-
-									}>
-										<Icon name="bars" size={22} color={gray} containerStyle={{ marginRight: 6 }} type='font-awesome' />
+								<View style={{ backgroundColor: 'transparent', padding: 4, borderRadius: 4, marginLeft: 3, flexDirection: 'row', alignItems: 'center' }}>
+									<TouchableOpacity
+										hitSlop={{ top: 15, right: 0, bottom: 15, left: 15 }}
+										onPress={() => { navigation.navigate('Perguntas', { prospecto_id: prospecto.id }) }}
+									>
+										<Icon name="list" size={22} color={gray} containerStyle={{ marginRight: 12 }} type='font-awesome' />
 									</TouchableOpacity>
-									<TouchableOpacity style={{ flexDirection: "row" }} onPress={() => { this.whatsapp() }} >
-										<Icon name="whatsapp" size={22} color={gray} containerStyle={{ marginRight: 6 }} type='font-awesome' />
+									<TouchableOpacity style={{ flexDirection: "row" }}
+										onPress={() => { this.whatsapp() }}
+										hitSlop={{ top: 15, right: 15, bottom: 15, left: 0 }}
+									>
+										<Icon name="whatsapp" size={22} color={gray} containerStyle={{ marginRight: 0 }} type='font-awesome' />
 									</TouchableOpacity>
 								</View>
 
 							}
 							{
 								prospecto.situacao_id === SITUACAO_LIGAR &&
-								<View style={{ backgroundColor: 'transparent', padding: 4, borderRadius: 4, marginLeft: 3, flexDirection: 'row' }}>
+								<View style={{ backgroundColor: 'transparent', padding: 4, borderRadius: 4, marginLeft: 3, flexDirection: 'row', alignItems: 'center' }}>
 									<TouchableOpacity
-										onPress={() => {
-											const { prospecto, alterarAdministracao, alterarProspectoNoAsyncStorage } = this.props
-											let { administracao } = this.props
-											administracao.ligueiParaAlguem = true
-											administracao.prospectoSelecionado = prospecto
-											alterarAdministracao(administracao)
-											prospecto.ligueiParaAlguem = true
-											alterarProspectoNoAsyncStorage(prospecto)
-										}}
+										hitSlop={{ top: 15, right: 0, bottom: 15, left: 15 }}
+										onPress={() => { navigation.navigate('Perguntas', { prospecto_id: prospecto.id }) }}
 									>
-										<Icon name='bars' type='font-awesome' color={gray} containerStyle={{ marginRight: 6 }} type='font-awesome' />
+										<Icon name='list' type='font-awesome' color={gray} containerStyle={{ marginRight: 12 }} type='font-awesome' />
 									</TouchableOpacity>
-									<TouchableOpacity style={{ flexDirection: "row" }} onPress={() => { this.chamarOTelefoneDoCelular() }} >
-										<Icon name="phone" size={22} containerStyle={{ marginRight: 6 }} color={gray} />
+									<TouchableOpacity style={{ flexDirection: "row" }}
+										onPress={() => { this.chamarOTelefoneDoCelular() }}
+										hitSlop={{ top: 15, right: 15, bottom: 15, left: 0 }}
+									>
+										<Icon name="phone" size={22} containerStyle={{ marginRight: 0 }} color={gray} />
 									</TouchableOpacity>
 								</View>
 							}
@@ -212,9 +191,10 @@ class Prospecto2 extends React.Component {
 								prospecto.situacao_id === SITUACAO_VISITAR &&
 								<View style={{ backgroundColor: 'transparent', padding: 4, borderRadius: 4, marginLeft: 3 }}>
 									<TouchableOpacity
+										hitSlop={{ top: 15, right: 15, bottom: 15, left: 15 }}
 										onPress={() => { navigation.navigate('Perguntas', { prospecto_id: prospecto.id }) }}
 									>
-										<Icon name='list' type='font-awesome' color={gray} containerStyle={{ marginRight: 6 }} type='font-awesome' />
+										<Icon name='list' type='font-awesome' color={gray} containerStyle={{ marginRight: 0 }} type='font-awesome' />
 									</TouchableOpacity>
 								</View>
 							}
@@ -223,13 +203,13 @@ class Prospecto2 extends React.Component {
 								prospecto.situacao_id === SITUACAO_ARENA &&
 								<View style={{ backgroundColor: 'transparent', padding: 4, borderRadius: 4, marginLeft: 3 }}>
 									<TouchableOpacity
+										hitSlop={{ top: 15, right: 15, bottom: 15, left: 15 }}
 										onPress={() => { navigation.navigate('Perguntas', { prospecto_id: prospecto.id }) }}
 									>
-										<Icon name='list' type='font-awesome' color={gray} containerStyle={{ marginRight: 6 }} type='font-awesome' />
+										<Icon name='list' type='font-awesome' color={gray} containerStyle={{ marginRight: 0 }} type='font-awesome' />
 									</TouchableOpacity>
 								</View>
 							}
-
 
 						</View>
 					</View>

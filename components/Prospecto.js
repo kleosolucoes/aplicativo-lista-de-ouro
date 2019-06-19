@@ -7,7 +7,7 @@ import {
 	Linking
 } from 'react-native';
 import { Card, Icon, Badge } from 'react-native-elements'
-import { white, lightdark, red, dark } from '../helpers/colors'
+import { white, lightdark, blue, dark } from '../helpers/colors'
 import call from 'react-native-phone-call'
 import email from 'react-native-email'
 import {
@@ -74,7 +74,7 @@ class Prospecto extends React.Component {
 						prospecto.data && prospecto.situacao_id !== SITUACAO_FECHAMENTO &&
 						<View style={styles.date}>
 							<View style={{
-								borderRadius: 9, backgroundColor: red, borderWidth: 0,
+								borderRadius: 9, backgroundColor: blue, borderWidth: 0,
 								paddingHorizontal: 4, paddingVertical: 2
 							}}>
 								<Text style={{ color: white, fontSize: 12 }}>
@@ -86,8 +86,8 @@ class Prospecto extends React.Component {
 					{
 						prospecto.rating &&
 						<View style={[styles.rating, style = { alignItems: 'center' }]}>
-							<Icon name='star' type="font-awesome" size={14} color={red} />
-							<Text style={{ color: red }}> {prospecto.rating} </Text>
+							<Icon name='star' type="font-awesome" size={14} color={blue} />
+							<Text style={{ color: blue }}> {prospecto.rating} </Text>
 						</View>
 					}
 				</View>
@@ -96,7 +96,7 @@ class Prospecto extends React.Component {
 						<Text style={[styles.text, style = { fontWeight: 'bold' }]}>{prospecto.nome}</Text>
 
 						{prospecto.online &&
-							<View style={{ marginLeft: 5, backgroundColor: red, padding: 3, flexDirection: "row", borderRadius: 4, alignItems: "center" }}>
+							<View style={{ marginLeft: 5, backgroundColor: blue, padding: 3, flexDirection: "row", borderRadius: 4, alignItems: "center" }}>
 								<Icon name="globe" type='font-awesome' color={white} size={16} containerStyle={{ marginRight: 4 }} />
 								<Text style={{ color: white }}>web</Text>
 							</View>
@@ -230,7 +230,7 @@ class Prospecto extends React.Component {
 							/>
 							<View
 								style={{
-									backgroundColor: red, borderRadius: 9, borderWidth: 0,
+									backgroundColor: blue, borderRadius: 9, borderWidth: 0,
 									padding: 5
 								}}
 							>

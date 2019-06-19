@@ -13,7 +13,7 @@ import { Drawer, Header, Title, Left, Body, Right, Fab, Button } from 'native-ba
 import SideBar from '../components/SideBar'
 import { createBottomTabNavigator } from 'react-navigation'
 import AddButton from '../components/AddButton'
-import { white, red, dark, lightdark, black } from '../helpers/colors'
+import { white, blue, dark, lightdark, black } from '../helpers/colors'
 import ListaDeProspectos from '../components/ListaDeProspectos'
 import { LinearGradient } from 'expo'
 import { connect } from 'react-redux'
@@ -106,9 +106,11 @@ class ProspectosScreen extends React.Component {
 
 		if (tipo === 'remover') {
 			Alert.alert('Removido', 'removido!')
-		} else {
-			Alert.alert('Sucesso!', 'OK!')
 		}
+		else if (tipo === 'sim') {
+			Alert.alert('Ótimo!', 'Consolidação foi para o próximo passo.')
+		}
+
 	}
 
 	marcarDataEHora = () => {
@@ -302,13 +304,13 @@ class ProspectosScreen extends React.Component {
 				tabBarOptions: {
 					showIcon: true,
 					showLabel: false,
-					activeTintColor: red,
+					activeTintColor: blue,
 					inactiveTintColor: '#eee',
 					style: {
 						backgroundColor: dark,
 					},
 					indicatorStyle: {
-						backgroundColor: red,
+						backgroundColor: blue,
 					},
 				}
 			}
@@ -328,14 +330,26 @@ class ProspectosScreen extends React.Component {
 					<Left style={{ flex: 0 }}>
 						<TouchableOpacity
 							style={{ backgroundColor: 'transparent', margin: 0, borderWidth: 0, paddingHorizontal: 8 }}
-							onPress={() => this.openDrawer()}>
-							<Icon type="font-awesome" name="bars" color={white} />
+							onPress={() => {
+								!carregando && !administracao.ligueiParaAlguem && administracao.mandeiWhatsapp
+									|| !carregando && !administracao.mandeiWhatsapp && administracao.ligueiParaAlguem
+									? this.alterarProspecto() : this.openDrawer()
+							}
+							}>
+							<Icon type="font-awesome"
+								name={
+									!carregando && !administracao.ligueiParaAlguem && administracao.mandeiWhatsapp
+										|| !carregando && !administracao.mandeiWhatsapp && administracao.ligueiParaAlguem
+										? 'angle-left' : 'bars'
+								}
+								color={white} />
 						</TouchableOpacity>
 					</Left>
 					<Body style={{ flex: 1 }}>
-						<Title style={{ textAlign: 'center', alignSelf: 'center', justifyContent: "center", color: white, fontWeight: '200', fontSize: 16 }}>BLACK BELT</Title>
+						<Title style={{ textAlign: 'center', alignSelf: 'center', justifyContent: "center", color: white, fontWeight: '200', fontSize: 16 }}>CHURCH PRO</Title>
 					</Body>
 					<Right style={{ flex: 0 }}>
+						<View style={{width: 35}} />
 						{/* <TouchableOpacity
 							style={{ backgroundColor: 'transparent', borderWidth: 0, paddingHorizontal: 8 }}
 							onPress={() => this.sincronizar()}>
@@ -352,7 +366,7 @@ class ProspectosScreen extends React.Component {
 							<View style={{ flex: 1, justifyContent: 'center' }}>
 								<ActivityIndicator
 									size="large"
-									color={red}
+									color={blue}
 								/>
 							</View>
 						}
@@ -366,7 +380,7 @@ class ProspectosScreen extends React.Component {
 						{
 							!carregando && !administracao.mandeiWhatsapp &&
 							administracao.ligueiParaAlguem &&
-							<Card containerStyle={{ backgroundColor: dark, borderColor: red, borderRadius: 6 }}>
+							<Card containerStyle={{ backgroundColor: dark, borderColor: blue, borderRadius: 6 }}>
 								<Text style={{
 									color: white, textAlign: 'center', fontWeight: 'bold',
 									paddingBottom: 8
@@ -385,7 +399,7 @@ class ProspectosScreen extends React.Component {
 										})}
 										checkedIcon='dot-circle-o'
 										uncheckedIcon='circle-o'
-										checkedColor={red}
+										checkedColor={blue}
 										textStyle={{ color: white }}
 										containerStyle={{ backgroundColor: 'transparent', borderWidth: 0 }}
 									/>
@@ -399,7 +413,7 @@ class ProspectosScreen extends React.Component {
 										})}
 										checkedIcon='dot-circle-o'
 										uncheckedIcon='circle-o'
-										checkedColor={red}
+										checkedColor={blue}
 										textStyle={{ color: white }}
 										containerStyle={{ backgroundColor: 'transparent', borderWidth: 0 }}
 									/>
@@ -413,7 +427,7 @@ class ProspectosScreen extends React.Component {
 										})}
 										checkedIcon='dot-circle-o'
 										uncheckedIcon='circle-o'
-										checkedColor={red}
+										checkedColor={blue}
 										textStyle={{ color: white }}
 										containerStyle={{ backgroundColor: 'transparent', borderWidth: 0 }}
 									/>
@@ -423,7 +437,8 @@ class ProspectosScreen extends React.Component {
 									{
 										this.state.ligou &&
 										<TouchableOpacity
-											style={[styles.button, style = { height: 40, borderRadius: 0, backgroundColor: red }]}
+											hitSlop={{top: 15, right: 15, bottom: 15, left: 15}}
+											style={[styles.button, style = { height: 40, borderRadius: 0, backgroundColor: blue }]}
 											onPress={() => { this.marcarDataEHora() }}>
 											<Text style={styles.textButton}>Marcar visita</Text>
 										</TouchableOpacity>
@@ -431,7 +446,8 @@ class ProspectosScreen extends React.Component {
 									{
 										this.state.naoLigou &&
 										<TouchableOpacity
-											style={[styles.button, style = { height: 40, borderRadius: 0, backgroundColor: red }]}
+											hitSlop={{top: 15, right: 15, bottom: 15, left: 15}}
+											style={[styles.button, style = { height: 40, borderRadius: 0, backgroundColor: blue }]}
 											onPress={() => { this.alterarProspecto('remover') }}>
 											<Text style={styles.textButton}>Remover</Text>
 										</TouchableOpacity>
@@ -439,7 +455,8 @@ class ProspectosScreen extends React.Component {
 									{
 										this.state.pendente &&
 										<TouchableOpacity
-											style={[styles.button, style = { height: 40, borderRadius: 0, backgroundColor: red }]}
+											hitSlop={{top: 15, right: 15, bottom: 15, left: 15}}
+											style={[styles.button, style = { height: 40, borderRadius: 0, backgroundColor: blue }]}
 											onPress={() => { this.alterarProspecto() }}>
 											<Text style={styles.textButton}>Ligar depois</Text>
 										</TouchableOpacity>
@@ -450,7 +467,7 @@ class ProspectosScreen extends React.Component {
 						}
 						{!carregando && !administracao.ligueiParaAlguem && administracao.mandeiWhatsapp &&
 
-							<Card containerStyle={{ backgroundColor: dark, borderColor: red, borderRadius: 6 }}>
+							<Card containerStyle={{ backgroundColor: dark, borderColor: blue, borderRadius: 6 }}>
 								<Text style={{
 									color: white, textAlign: 'center', fontWeight: 'bold',
 									paddingBottom: 8
@@ -458,7 +475,7 @@ class ProspectosScreen extends React.Component {
 								>
 									Mensagem foi enviada?
 								</Text>
-								<View style={{ backgroundColor: lightdark, height: 180, marginTop: 20, justifyContent: 'flex-start', alignItems: 'flex-start' }}>
+								<View style={{ backgroundColor: lightdark, height: 110, marginTop: 20, justifyContent: 'flex-start', alignItems: 'flex-start' }}>
 									<CheckBox
 										title='Sim'
 										checked={this.state.enviou}
@@ -470,7 +487,7 @@ class ProspectosScreen extends React.Component {
 										})}
 										checkedIcon='dot-circle-o'
 										uncheckedIcon='circle-o'
-										checkedColor={red}
+										checkedColor={blue}
 										textStyle={{ color: white }}
 										containerStyle={{ backgroundColor: 'transparent', borderWidth: 0 }}
 									/>
@@ -485,7 +502,7 @@ class ProspectosScreen extends React.Component {
 										})}
 										checkedIcon='dot-circle-o'
 										uncheckedIcon='circle-o'
-										checkedColor={red}
+										checkedColor={blue}
 										textStyle={{ color: white }}
 										containerStyle={{ backgroundColor: 'transparent', borderWidth: 0 }}
 									/>
@@ -495,7 +512,8 @@ class ProspectosScreen extends React.Component {
 									{
 										this.state.ligou &&
 										<TouchableOpacity
-											style={[styles.button, style = { height: 40, borderRadius: 0, backgroundColor: red }]}
+											hitSlop={{top: 15, right: 15, bottom: 15, left: 15}}
+											style={[styles.button, style = { height: 40, borderRadius: 0, backgroundColor: blue }]}
 											onPress={() => { this.marcarDataEHora() }}>
 											<Text style={styles.textButton}>Marcar Apresentação</Text>
 										</TouchableOpacity>
@@ -503,7 +521,8 @@ class ProspectosScreen extends React.Component {
 									{
 										this.state.naoLigou &&
 										<TouchableOpacity
-											style={[styles.button, style = { height: 40, borderRadius: 0, backgroundColor: red }]}
+											hitSlop={{top: 15, right: 15, bottom: 15, left: 15}}
+											style={[styles.button, style = { height: 40, borderRadius: 0, backgroundColor: blue }]}
 											onPress={() => { this.alterarProspecto('remover') }}>
 											<Text style={styles.textButton}>Remover</Text>
 										</TouchableOpacity>
@@ -511,15 +530,17 @@ class ProspectosScreen extends React.Component {
 									{
 										this.state.enviou &&
 										<TouchableOpacity
-											style={[styles.button, style = { height: 40, borderRadius: 0, backgroundColor: red }]}
+											hitSlop={{top: 15, right: 15, bottom: 15, left: 15}}
+											style={[styles.button, style = { height: 40, borderRadius: 0, backgroundColor: blue }]}
 											onPress={() => { this.alterarProspecto('sim') }}>
-											<Text style={styles.textButton}>Salvar</Text>
+											<Text style={styles.textButton}>OK</Text>
 										</TouchableOpacity>
 									}
 									{
 										this.state.pendente &&
 										<TouchableOpacity
-											style={[styles.button, style = { height: 40, borderRadius: 0, backgroundColor: red }]}
+											hitSlop={{top: 15, right: 15, bottom: 15, left: 15}}
+											style={[styles.button, style = { height: 40, borderRadius: 0, backgroundColor: blue }]}
 											onPress={() => { this.alterarProspecto() }}>
 											<Text style={styles.textButton}>Voltar</Text>
 										</TouchableOpacity>

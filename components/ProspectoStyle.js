@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { lightdark, gray, white, red, dark } from '../helpers/colors';
+import { lightdark, gray, white, blue, dark } from '../helpers/colors';
 
 const styles = StyleSheet.create({
 
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
         justifyContent: "flex-start"
     },
     badgeDate: {
-        backgroundColor: red,
+        backgroundColor: blue,
     },
    
 
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
         color: white
     },
     buttonImport:{
-        backgroundColor: red,
+        backgroundColor: blue,
         borderWidth: 0,
         justifyContent: 'center',
         alignSelf: 'center',
