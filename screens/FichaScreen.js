@@ -42,7 +42,6 @@ class FichaScreen extends React.Component {
         return (
             <LinearGradient style={{ flex: 1 }} colors={[black, dark, lightdark, '#343434']}>
                 <ListaDeProspectosFicha />
-                <Text style={{color: white}}>{prospectos.length}</Text>
             </LinearGradient>
         );
     }
