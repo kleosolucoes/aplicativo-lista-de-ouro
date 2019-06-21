@@ -18,8 +18,10 @@ import {
 
 
 const Apn = ({ prospectos }) => (
-    <Text style={styles.number}> {prospectos.length} </Text>
-);
+    <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+        <Text style={styles.number}> {prospectos.length} </Text>
+    </View >
+)
 
 class PerfilScreen extends React.Component {
 
@@ -62,70 +64,48 @@ class PerfilScreen extends React.Component {
 
         return (
             <LinearGradient style={{ flex: 1 }} colors={[black, dark, lightdark, '#343434']}>
-                {/* <View style={{ flex: 1, justifyContent: 'space-between' }}> */}
 
                 <View style={styles.containerProfile}>
                     {/* <Image source={userProfile} style={styles.userProfile} /> */}
                     {/* https://ui-avatars.com/api/?name=John+Doe */}
-                    <Text style={[styles.text]}>{usuario.email}</Text>
+                    <Text style={[styles.textProfile]}>CHURCH PRO</Text>
                 </View>
 
-                <View style={{ flex: 1, justifyContent: 'space-around', }}>
-                    <View style={{ flexDirection: 'row', justifyContent: 'center', marginBottom: 10, flexWrap: 'wrap'}}>
+                <View style={{ flex: 1, justifyContent: 'center', margin: 10 }}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'center', marginBottom: 10 }}>
                         <Card containerStyle={styles.box}>
-                            <Icon name="user" type="font-awesome" size={20} color={white} containerStyle={{ margin: 0 }} />
-                            <Text style={styles.number}>
-                                {/* {prospectos.length} */}
-                                <Apn prospectos={prospectos.filter(prospecto => prospecto.situacao_id !== SITUACAO_REMOVIDO)} />
-                            </Text>
-                            <Text style={styles.text}>Vidas</Text>
+                            <View style={{ alignItems: 'flex-start' }}>
+                                <Icon name="user" type="font-awesome" size={19} color={white} containerStyle={{ marginBottom: 4 }} />
+                                <Text style={styles.text}>VIDAS</Text>
+                            </View>
+                            <Apn prospectos={prospectos.filter(prospecto => prospecto.situacao_id !== SITUACAO_REMOVIDO)} />
                         </Card>
-                        <Card containerStyle={[styles.box, { marginHorizontal: 0 }]}>
-                            <Icon name="info-circle" type="font-awesome" size={20} color={white} containerStyle={{ margin: 0 }} />
+                        <Card containerStyle={[styles.box, { marginLeft: 10 }]}>
+                            <View style={{ alignItems: 'flex-start' }}>
+                                <Icon name="calendar" type="font-awesome" size={19} color={white} containerStyle={{ marginBottom: 4 }} />
+                                <Text style={styles.text}>VISITAS</Text>
+                            </View>
                             <Apn prospectos={prospectos.filter(prospecto => prospecto.situacao_id === SITUACAO_VISITAR)} />
-                            <Text style={styles.text}>Visitas</Text>
                         </Card>
+                    </View>
+                    <View style={{ flexDirection: 'row', justifyContent: 'center', marginBottom: 10 }}>
                         <Card containerStyle={styles.box}>
-                            <Icon name="trophy" type="font-awesome" size={20} color={white} containerStyle={{ margin: 0 }} />
+                            <View style={{ alignItems: 'flex-start' }}>
+                                <Icon name="trophy" type="font-awesome" size={19} color={white} containerStyle={{ marginBottom: 4 }} />
+                                <Text style={styles.text}>CÉLULA/CULTO</Text>
+                            </View>
                             <Apn prospectos={prospectos.filter(prospecto => prospecto.situacao_id === SITUACAO_ARENA)} />
-                            <Text style={styles.text}>C / C</Text>
                         </Card>
-                        <Card containerStyle={styles.box}>
-                            <Icon name="trophy" type="font-awesome" size={20} color={white} containerStyle={{ margin: 0 }} />
+                        <Card containerStyle={[styles.box, { marginLeft: 10 }]}>
+                            <View style={{ alignItems: 'flex-start' }}>
+                                <Icon name="file" type="font-awesome" size={19} color={white} containerStyle={{ marginBottom: 4 }} />
+                                <Text style={styles.text}>FICHAS</Text>
+                            </View>
                             <Apn prospectos={prospectos.filter(prospecto => prospecto.situacao_id === SITUACAO_FECHADO)} />
-                            <Text style={styles.text}>Fichas</Text>
                         </Card>
                     </View>
 
-                    <View>
-                        {/* <LineChart
-                            data={data}
-                            width={width - 20}
-                            height={Dimensions.get('window').height < 680 ? 185 : 220}
-                            chartConfig={{
-
-                                backgroundColor: lightdark,
-                                backgroundGradientFrom: '#303030',
-                                backgroundGradientTo: '#343434',
-                                decimalPlaces: 2, // optional, defaults to 2dp
-                                color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                                style: {
-                                    borderRadius: 16
-                                },
-                                strokeWidth: 2
-                            }}
-                            bezier
-                            style={{
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                marginVertical: 8,
-                                borderRadius: 16
-                            }}
-                        /> */}
-                    </View>
                 </View>
-
-                {/* </View> */}
 
             </LinearGradient>
         );
@@ -151,17 +131,18 @@ const styles = StyleSheet.create({
     containerProfile: {
         borderBottomWidth: 1,
         borderBottomColor: gray,
-        paddingBottom: Dimensions.get('window').height < 680 ? 20 : 35,
+        paddingBottom: Dimensions.get('window').height < 680 ? 30 : 50,
         paddingTop: Dimensions.get('window').height < 680 ? 0 : 15,
     },
     box: {
         backgroundColor: blue,
-        width: Dimensions.get('window').height < 650 ? 90 : 110,
-        justifyContent: 'center',
-        alignItems: 'center',
+        flex: 1,
+        height: Dimensions.get('window').height < 650 ? 100 : 110,
+        // alignItems: 'center',
         padding: Dimensions.get('window').height < 680 ? 5 : 10,
         borderWidth: 0,
         borderRadius: 6,
+        margin: 0,
 
         shadowColor: black,
         shadowOffset: { width: 0, height: 3 },
@@ -170,11 +151,18 @@ const styles = StyleSheet.create({
     },
     text: {
         color: white,
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        fontWeight: 'bold'
+    },
+    textProfile: {
+        color: white,
         textAlign: 'center',
+        fontSize: 24,
     },
     number: {
-        color: black,
-        textAlign: 'center',
+        marginTop: 10,
+        color: white,
         fontSize: 26,
         fontWeight: "bold"
     },
