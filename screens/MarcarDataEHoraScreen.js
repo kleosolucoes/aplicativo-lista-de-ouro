@@ -14,6 +14,7 @@ import { connect } from 'react-redux'
 import DatePicker from 'react-native-datepicker'
 import { alterarProspectoNoAsyncStorage } from '../actions'
 import { SITUACAO_LIGAR, SITUACAO_VISITAR, } from '../helpers/constants'
+import HeaderComponent from '../components/Header';
 
 class MarcarDataEHoraScreen extends React.Component {
 
@@ -30,22 +31,24 @@ class MarcarDataEHoraScreen extends React.Component {
 			}
 			prospecto.situacao_id = situacao_id
 			alterarProspectoNoAsyncStorage(prospecto)
-			let textoMarcouUmaApresentacao = ''
-			switch (situacao_id) {
-				case SITUACAO_LIGAR:
-					textoMarcouUmaApresentacao = 'Visita marcada!'
-					break;
-				case SITUACAO_VISITAR:
-					textoMarcouUmaApresentacao = 'Visita marcada!'
-					break;
-			}
-			Alert.alert('Sucesso', textoMarcouUmaApresentacao)
-			if (situacao_id === SITUACAO_VISITAR) {
-				navigation.navigate('Prospectos')
-				// navigation.navigate('Apresentar')
-			} else {
-				navigation.goBack()
-			}
+
+			setTimeout(() => {
+				let textoMarcouUmaApresentacao = ''
+				switch (situacao_id) {
+					case SITUACAO_LIGAR:
+						textoMarcouUmaApresentacao = 'Visita marcada!'
+						break;
+					case SITUACAO_VISITAR:
+						textoMarcouUmaApresentacao = 'Visita marcada!'
+						break;
+				}
+				Alert.alert('Sucesso', textoMarcouUmaApresentacao)
+				if (situacao_id === SITUACAO_LIGAR) {
+					navigation.navigate('Ligar')
+				} else if (situacao_id === SITUACAO_VISITAR) {
+					navigation.navigate('Ligar')
+				}
+			}, 1000);
 		}
 	}
 
@@ -78,6 +81,8 @@ class MarcarDataEHoraScreen extends React.Component {
 			headerLeftContainerStyle: {
 				padding: 10,
 			},
+			// header: null,
+			gesturesEnabled: false,
 		}
 	}
 

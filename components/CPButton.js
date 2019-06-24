@@ -9,7 +9,7 @@ import {
 
 import { blue, white } from '../helpers/colors'
 
-const LOButton = ({ OnPress, title }) => (
+const CPButton = ({ OnPress, title }) => (
     <View style={styles.containerButton}>
         <TouchableOpacity
             style={styles.button}
@@ -20,7 +20,7 @@ const LOButton = ({ OnPress, title }) => (
     </View>
 );
 
-export default LOButton;
+export default CPButton;
 
 const styles = StyleSheet.create({
     containerButton: {

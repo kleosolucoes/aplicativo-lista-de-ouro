@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     sideMenu: {
         flex: 1,
         alignItems: 'center',
-        paddingVertical: 20, 
+        paddingVertical: 30,
     },
     imgLogo: {
         height: 85,

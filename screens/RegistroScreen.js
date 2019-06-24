@@ -22,7 +22,7 @@ import {
 	alterarUsuarioNoAsyncStorage,
 } from '../actions'
 import { connect } from 'react-redux'
-import LOButton from '../components/LOButton';
+import CPButton from '../components/CPButton';
 import { LinearGradient } from 'expo'
 
 class RegistroScreen extends React.Component {
@@ -118,7 +118,7 @@ class RegistroScreen extends React.Component {
 										this.props.alterarUsuarioNoAsyncStorage(usuario)
 											.then(() => {
 												Alert.alert('Registro', 'Registrado com sucesso!')
-												this.props.navigation.navigate('Prospectos')
+												this.props.navigation.navigate('Mensagem')
 											})
 									} else {
 										Alert.alert('Aviso', resposta.menssagem)
@@ -272,7 +272,7 @@ class RegistroScreen extends React.Component {
 								onSubmitEditing={() => this.ajudadorDeSubmissao()}
 							/>
 
-							<LOButton
+							<CPButton
 								title='Registrar'
 								OnPress={() => this.ajudadorDeSubmissao()}
 							/>

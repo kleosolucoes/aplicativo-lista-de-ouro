@@ -9,22 +9,28 @@ import { Button, Card, Icon, Input, CheckBox } from 'react-native-elements'
 import { white, gray, black, lightdark, dark, blue } from '../helpers/colors'
 import { connect } from 'react-redux'
 import { SITUACAO_VISITAR, SITUACAO_FECHADO, SITUACAO_FECHAMENTO, SITUACAO_ARENA, SITUACAO_MENSAGEM, SITUACAO_LIGAR } from '../helpers/constants'
-import { alterarProspectoNoAsyncStorage } from '../actions'
+import { alterarProspectoNoAsyncStorage, pegarProspectosNoAsyncStorage } from '../actions'
 import { LinearGradient } from 'expo'
-import LOButton from '../components/LOButton';
+import CPButton from '../components/CPButton';
 import styles from '../components/ProspectoStyle';
 import MarcarDataEHoraScreen from './MarcarDataEHoraScreen';
+import MensagemScreen from './MensagemScreen';
+import HeaderComponent from '../components/Header';
 
 class PerguntasScreen extends React.Component {
 
 	static navigationOptions = ({ navigation }) => {
 		return {
-			title: 'Situação',
-			headerTintColor: white,
+			// title: 'Situação',
+			// headerTintColor: white,
+			header: null,
+			gesturesEnabled: false,
 		}
 	}
 
 	state = {
+		enviouMensagem: false,
+		naoEnviouMensagem: false,
 		foiVisitado: false,
 		naoFoiVisitado: false,
 		vaiProArena: false,
@@ -43,50 +49,50 @@ class PerguntasScreen extends React.Component {
 		const { prospecto, alterarProspectoNoAsyncStorage, navigation } = this.props
 		prospecto.situacao_id = SITUACAO_ARENA
 		alterarProspectoNoAsyncStorage(prospecto)
-		navigation.goBack()
-		Alert.alert('Sucesso', 'Vamo pra cima!')
+		setTimeout(() => {
+			Alert.alert('Sucesso', 'Vamos pra cima!')
+			navigation.navigate('Visitar')
+		}, 1000);
 	}
 	fecharFicha() {
 		const { prospecto, alterarProspectoNoAsyncStorage, navigation } = this.props
 		prospecto.situacao_id = SITUACAO_FECHADO
 		alterarProspectoNoAsyncStorage(prospecto)
-		Alert.alert('Parabéns', 'Vamo pra cima!')
-		navigation.goBack()
+		setTimeout(() => {
+			Alert.alert('Parabéns', 'Você cumpriu seu objetivo!')
+			navigation.navigate('CelulaCulto')
+		}, 1000);
 	}
 
 	alterar = (tipo) => {
 		const {
 			alterarProspectoNoAsyncStorage,
-
 			navigation,
 			prospecto,
 		} = this.props
 
-		if (tipo === 'remover') {
-			prospecto.situacao_id = SITUACAO_REMOVIDO
-			navigation.goBack()
-		}
 		if (tipo === 'sim') {
 			prospecto.situacao_id = SITUACAO_LIGAR
-			// navigation.goBack()
-			navigation.navigate('Prospectos', { situacao_id: prospecto.situacao_id })
-		}
-		else {
-			navigation.goBack()
+			alterarProspectoNoAsyncStorage(prospecto)
+
+			setTimeout(() => {
+				Alert.alert('Ótimo!', 'Consolidação foi para o próximo passo.')
+				navigation.navigate('Mensagem')
+			}, 1000);
+
 		}
 
-		alterarProspectoNoAsyncStorage(prospecto)
-
-		if (tipo === 'remover') {
-			Alert.alert('Removido', 'removido!')
+		if (tipo === 'nao') {
+			navigation.navigate('Mensagem')
 		}
-		else if (tipo === 'sim') {
-			Alert.alert('Ótimo!', 'Consolidação foi para o próximo passo.')
+
+		if (tipo === 'naoLigou') {
+			navigation.navigate('Ligar')
 		}
 
 	}
 
-	marcarDataEHora = () => {
+	marcarDataEHora = (tipo) => {
 		const {
 			alterarProspectoNoAsyncStorage,
 			navigation,
@@ -96,6 +102,7 @@ class PerguntasScreen extends React.Component {
 		alterarProspectoNoAsyncStorage(prospecto)
 
 		navigation.navigate('MarcarDataEHora', { prospecto_id: prospecto.id, situacao_id: SITUACAO_VISITAR })
+
 	}
 
 	render() {
@@ -105,6 +112,7 @@ class PerguntasScreen extends React.Component {
 
 		return (
 			<LinearGradient style={{ flex: 1 }} colors={[black, dark, lightdark, '#343434']}>
+				<HeaderComponent />
 				<View style={{ flex: 1, padding: 20 }}>
 
 					{prospecto.situacao_id === SITUACAO_MENSAGEM &&
@@ -120,12 +128,10 @@ class PerguntasScreen extends React.Component {
 							<View style={{ backgroundColor: lightdark, height: 110, marginTop: 20, justifyContent: 'flex-start', alignItems: 'flex-start' }}>
 								<CheckBox
 									title='Sim'
-									checked={this.state.enviou}
+									checked={this.state.enviouMensagem}
 									onPress={() => this.setState({
-										enviou: true,
-										ligou: false,
-										naoLigou: false,
-										pendente: false,
+										enviouMensagem: true,
+										naoEnviouMensagem: false,
 									})}
 									checkedIcon='dot-circle-o'
 									uncheckedIcon='circle-o'
@@ -135,12 +141,10 @@ class PerguntasScreen extends React.Component {
 								/>
 								<CheckBox
 									title='Não'
-									checked={this.state.pendente}
+									checked={this.state.naoEnviouMensagem}
 									onPress={() => this.setState({
-										enviou: false,
-										ligou: false,
-										naoLigou: false,
-										pendente: true,
+										enviouMensagem: false,
+										naoEnviouMensagem: true,
 									})}
 									checkedIcon='dot-circle-o'
 									uncheckedIcon='circle-o'
@@ -152,38 +156,21 @@ class PerguntasScreen extends React.Component {
 
 							<View style={{ backgroundColor: dark, height: 40, marginTop: 20, justifyContent: 'flex-end', marginLeft: -15, marginRight: -15, marginBottom: -15 }}>
 								{
-									this.state.ligou &&
+									this.state.enviouMensagem &&
 									<TouchableOpacity
 										hitSlop={{ top: 15, right: 15, bottom: 15, left: 15 }}
 										style={[styles.button, style = { height: 40, borderRadius: 0, backgroundColor: blue }]}
-										onPress={() => { this.marcarDataEHora() }}>
-										<Text style={styles.textButton}>Marcar Apresentação</Text>
-									</TouchableOpacity>
-								}
-								{
-									this.state.naoLigou &&
-									<TouchableOpacity
-										hitSlop={{ top: 15, right: 15, bottom: 15, left: 15 }}
-										style={[styles.button, style = { height: 40, borderRadius: 0, backgroundColor: blue }]}
-										onPress={() => { this.alterar('remover') }}>
-										<Text style={styles.textButton}>Remover</Text>
-									</TouchableOpacity>
-								}
-								{
-									this.state.enviou &&
-									<TouchableOpacity
-										hitSlop={{ top: 15, right: 15, bottom: 15, left: 15 }}
-										style={[styles.button, style = { height: 40, borderRadius: 0, backgroundColor: blue }]}
-										onPress={() => { this.alterar('sim') }}>
+										onPress={() => { this.alterar('sim') }}
+									>
 										<Text style={styles.textButton}>OK</Text>
 									</TouchableOpacity>
 								}
 								{
-									this.state.pendente &&
+									this.state.naoEnviouMensagem &&
 									<TouchableOpacity
 										hitSlop={{ top: 15, right: 15, bottom: 15, left: 15 }}
 										style={[styles.button, style = { height: 40, borderRadius: 0, backgroundColor: blue }]}
-										onPress={() => { this.alterar() }}>
+										onPress={() => { this.alterar('nao') }}>
 										<Text style={styles.textButton}>Voltar</Text>
 									</TouchableOpacity>
 								}
@@ -210,7 +197,6 @@ class PerguntasScreen extends React.Component {
 									onPress={() => this.setState({
 										ligou: true,
 										naoLigou: false,
-										pendente: false,
 									})}
 									checkedIcon='dot-circle-o'
 									uncheckedIcon='circle-o'
@@ -223,8 +209,7 @@ class PerguntasScreen extends React.Component {
 									checked={this.state.pendente}
 									onPress={() => this.setState({
 										ligou: false,
-										naoLigou: false,
-										pendente: true,
+										naoLigou: true,
 									})}
 									checkedIcon='dot-circle-o'
 									uncheckedIcon='circle-o'
@@ -241,9 +226,7 @@ class PerguntasScreen extends React.Component {
 										hitSlop={{ top: 15, right: 15, bottom: 15, left: 15 }}
 										style={[styles.button, style = { height: 40, borderRadius: 0, backgroundColor: blue }]}
 										onPress={() => {
-											navigation.goBack()
-											this.marcarDataEHora()
-											// this.setModalVisible(true)
+											this.marcarDataEHora('ligar')
 										}}>
 										<Text style={styles.textButton}>Marcar visita</Text>
 									</TouchableOpacity>
@@ -253,17 +236,8 @@ class PerguntasScreen extends React.Component {
 									<TouchableOpacity
 										hitSlop={{ top: 15, right: 15, bottom: 15, left: 15 }}
 										style={[styles.button, style = { height: 40, borderRadius: 0, backgroundColor: blue }]}
-										onPress={() => { this.alterar('remover') }}>
-										<Text style={styles.textButton}>Remover</Text>
-									</TouchableOpacity>
-								}
-								{
-									this.state.pendente &&
-									<TouchableOpacity
-										hitSlop={{ top: 15, right: 15, bottom: 15, left: 15 }}
-										style={[styles.button, style = { height: 40, borderRadius: 0, backgroundColor: blue }]}
-										onPress={() => { this.alterar() }}>
-										<Text style={styles.textButton}>Ligar depois</Text>
+										onPress={() => { this.alterar('naoLigou') }}>
+										<Text style={styles.textButton}>Voltar</Text>
 									</TouchableOpacity>
 								}
 							</View>
@@ -321,7 +295,7 @@ class PerguntasScreen extends React.Component {
 								color: white, textAlign: 'center',
 								fontWeight: 'bold', paddingBottom: 8
 							}}>
-								Confirmou a célula/culto?
+								Confirmou ir a célula/culto?
 							</Text>
 							<View style={{ flexDirection: 'row', backgroundColor: lightdark, height: 50, justifyContent: 'center', alignItems: 'center' }}>
 								<CheckBox
@@ -362,23 +336,25 @@ class PerguntasScreen extends React.Component {
 					}
 					{
 						foiVisitado && vaiProArena &&
-						<LOButton
+						<CPButton
 							title="OK"
 							OnPress={() => { this.alterarProspecto() }}
 						/>
 					}
 					{
 						foiVisitado && !vaiProArena && naoVaiProArena &&
-						<LOButton
-							title="Remarcar"
-							OnPress={() => { navigation.navigate('MarcarDataEHora', { prospecto_id: prospecto.id, situacao_id: SITUACAO_VISITAR, }) }}
+						<CPButton
+							title="Voltar"
+							// OnPress={() => { navigation.navigate('MarcarDataEHora', { prospecto_id: prospecto.id, situacao_id: SITUACAO_VISITAR, }) }}
+							OnPress={() => { navigation.navigate('Visitar') }}
 						/>
 					}
 					{
 						naoFoiVisitado &&
-						<LOButton
-							title="Remarcar"
-							OnPress={() => { navigation.navigate('MarcarDataEHora', { prospecto_id: prospecto.id, situacao_id: SITUACAO_VISITAR, }) }}
+						<CPButton
+							title="Voltar"
+							// OnPress={() => { navigation.navigate('MarcarDataEHora', { prospecto_id: prospecto.id, situacao_id: SITUACAO_VISITAR, }) }}
+							OnPress={() => { navigation.navigate('Visitar') }}
 						/>
 					}
 
@@ -386,7 +362,7 @@ class PerguntasScreen extends React.Component {
 						<Card containerStyle={{ backgroundColor: dark, borderColor: blue, borderRadius: 6, margin: 0, marginBottom: 10 }}>
 
 							<Text style={{ color: white, textAlign: 'center', fontWeight: 'bold', paddingBottom: 8 }}>
-								Foi ao arena/célula?
+								Foi ao culto/célula?
 							</Text>
 							<View style={{ flexDirection: 'row', backgroundColor: lightdark, height: 50, justifyContent: 'center', alignItems: 'center' }}>
 								<CheckBox
@@ -476,24 +452,24 @@ class PerguntasScreen extends React.Component {
 					}
 					{
 						foiProArena && fechouFicha &&
-						<LOButton
+						<CPButton
 							title="OK"
 							OnPress={() => { this.fecharFicha() }}
 						/>
 					}
 					{
 						naoFoiProArena &&
-						<LOButton
+						<CPButton
 							title="Voltar"
-							OnPress={() => { navigation.goBack() }}
+							OnPress={() => { navigation.navigate('CelulaCulto') }}
 						/>
 					}
 
 					{
 						foiProArena && naoFechouFicha &&
-						<LOButton
+						<CPButton
 							title="Voltar"
-							OnPress={() => { navigation.goBack() }}
+							OnPress={() => { navigation.navigate('CelulaCulto') }}
 						/>
 					}
 

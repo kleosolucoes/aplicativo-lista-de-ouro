@@ -12,7 +12,7 @@ import {
 function prospectos(state = [], action){
 	switch(action.type){
 		case PEGAR_PROSPECTOS:
-			return [...state, ...action.prospectos]
+			return [...action.prospectos]
 		case ADICIONAR_PROSPECTOS:
 			return [...state, ...action.prospectos]
 		case ALTERAR_PROSPECTO:

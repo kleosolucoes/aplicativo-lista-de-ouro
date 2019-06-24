@@ -7,7 +7,6 @@ import {
 	NetInfo,
 	Alert
 } from 'react-native';
-import Prospecto from '../components/Prospecto'
 import Prospecto2 from '../components/Prospecto2'
 import {
 	sincronizarNaAPI,

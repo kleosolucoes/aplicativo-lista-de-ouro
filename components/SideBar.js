@@ -14,6 +14,7 @@ import {
 import { LinearGradient } from 'expo'
 import { dark, black, lightdark, white } from '../helpers/colors';
 import { Icon } from 'react-native-elements';
+import PerfilScreen from '../screens/PerfilScreen';
 
 class SideBar extends React.Component {
 
@@ -36,6 +37,21 @@ class SideBar extends React.Component {
 			<LinearGradient style={{ flex: 1 }} colors={[black, dark, lightdark, '#343434', 'rgba(52, 52, 52, 0.9)']}>
 				<View style={styles.sideMenu}>
 
+					<TouchableOpacity
+						onPress={() => this.props.navigation.navigate('Mensagem')}
+						style={{ flexDirection: 'row', alignItems: 'center', }}
+					>
+						<Icon
+							name="home"
+							size={22}
+							type="font-awesome"
+							color={white}
+							containerStyle={{ marginRight: 6 }}
+						/>
+						<Text style={styles.textMenu}>
+							Inicio
+                        </Text>
+					</TouchableOpacity>
 					<TouchableOpacity
 						onPress={() => this.props.navigation.navigate('Perfil')}
 						style={{ flexDirection: 'row', alignItems: 'center', }}
@@ -68,7 +84,7 @@ class SideBar extends React.Component {
                         </Text>
 					</TouchableOpacity>
 
-					<TouchableOpacity
+					{/* <TouchableOpacity
 						onPress={() => this.sair()}
 						style={{ flexDirection: 'row', alignItems: 'center', }}
 					>
@@ -82,7 +98,7 @@ class SideBar extends React.Component {
 						<Text style={styles.textMenu}>
 							Sair
                         </Text>
-					</TouchableOpacity>
+					</TouchableOpacity> */}
 
 
 				</View>

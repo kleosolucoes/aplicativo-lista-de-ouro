@@ -86,6 +86,7 @@ class ImportarProspectosScreen extends React.Component {
 		// title: 'Importar Prospectos',
 		// headerTintColor: white,
 		header: null,
+		gesturesEnabled: false,
 	}
 
 	state = {
@@ -195,7 +196,7 @@ class ImportarProspectosScreen extends React.Component {
 		).then(() => {
 			this.setState({ carregando: false })
 			Alert.alert('Importação', 'Importação concluida com sucesso!')
-			navigation.goBack()
+			navigation.navigate('Mensagem')
 		})
 	}
 
@@ -212,13 +213,13 @@ class ImportarProspectosScreen extends React.Component {
 				<Header style={{
 					backgroundColor: black, borderBottomWidth: 0,
 					paddingTop: Platform.OS === 'ios' ? 20 : 0,
-					paddingLeft: 10
+					// paddingLeft: 10
 				}} iosBarStyle="light-content">
 					<Left style={{ flex: 0 }}>
 						<TouchableOpacity
 							style={{ backgroundColor: 'transparent', margin: 0, borderWidth: 0, paddingHorizontal: 8 }}
-							onPress={() => this.props.navigation.goBack()}>
-							<Icon type="font-awesome" name="angle-left" color={white} size={28} />
+							onPress={() => this.props.navigation.navigate('Mensagem')}>
+							<Icon type="font-awesome" name="angle-left" color={white} size={34} />
 						</TouchableOpacity>
 					</Left>
 					<Body style={{ flex: 1 }}>

@@ -10,8 +10,9 @@ import { AirbnbRating } from 'react-native-ratings'
 import { white, lightdark, dark, gray, blue, black } from '../helpers/colors'
 import { connect } from 'react-redux'
 import { alterarProspectoNoAsyncStorage } from '../actions'
-import {LinearGradient} from 'expo'
-import LOButton from '../components/LOButton';
+import { LinearGradient } from 'expo'
+import CPButton from '../components/CPButton';
+import HeaderComponent from '../components/Header';
 
 class QualificarProspectoScreen extends React.Component {
 
@@ -40,19 +41,20 @@ class QualificarProspectoScreen extends React.Component {
 		const { params = {} } = navigation.state
 		return {
 			// title: 'Qualificar',
-			headerStyle: {
-				backgroundColor: black,
-				borderBottomWidth: 0,
-			},
-			headerTitleStyle: {
-				flex: 1,
-				textAlign: 'center',
-				alignSelf: 'center',
-			},
-			headerLeftContainerStyle: {
-				padding: 10,
-			},
-			headerTintColor: white,
+			header: null,
+			// headerStyle: {
+			// 	backgroundColor: black,
+			// 	borderBottomWidth: 0,
+			// },
+			// headerTitleStyle: {
+			// 	flex: 1,
+			// 	textAlign: 'center',
+			// 	alignSelf: 'center',
+			// },
+			// headerLeftContainerStyle: {
+			// 	padding: 10,
+			// },
+			// headerTintColor: white,
 		}
 	}
 
@@ -62,29 +64,30 @@ class QualificarProspectoScreen extends React.Component {
 
 		return (
 			<LinearGradient style={{ flex: 1 }} colors={[black, dark, lightdark, '#343434']}>
-			<View style={styles.container}>
-				<Text style={{ textAlign: "center", color: gray, fontSize: 18 }}>
-					Qualifique a consolidação de acordo com o nível de interesse
+				<HeaderComponent icon="angle-left" onPress={() => this.props.navigation.navigate('Mensagem')} />
+				<View style={styles.container}>
+					<Text style={{ textAlign: "center", color: gray, fontSize: 18 }}>
+						Qualifique a consolidação de acordo com o nível de interesse
 				</Text>
 
-				<View>
-					<Text style={styles.name}>
-						{prospecto && prospecto.nome}
-					</Text>
+					<View>
+						<Text style={styles.name}>
+							{prospecto && prospecto.nome}
+						</Text>
 
-					<AirbnbRating
-						showRating={false}
-						defaultRating={prospecto.rating}
-						onFinishRating={(valor) => this.setState({ rating: valor })}
+						<AirbnbRating
+							showRating={false}
+							defaultRating={prospecto.rating}
+							onFinishRating={(valor) => this.setState({ rating: valor })}
+						/>
+					</View>
+
+					<CPButton
+						title="Qualificar"
+						OnPress={() => this.alterarProspecto()}
 					/>
+
 				</View>
-
-				<LOButton 
-					title="Qualificar"
-					OnPress={() => this.alterarProspecto()}
-				/>
-
-			</View>
 			</LinearGradient>
 		)
 	}

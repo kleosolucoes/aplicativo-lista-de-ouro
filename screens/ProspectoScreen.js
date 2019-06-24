@@ -12,7 +12,7 @@ import {
 import { connect } from 'react-redux'
 import { LinearGradient } from 'expo'
 import { SITUACAO_MENSAGEM } from '../helpers/constants';
-import LOButton from '../components/LOButton';
+import CPButton from '../components/CPButton';
 
 class ProspectoScreen extends React.Component {
 
@@ -92,7 +92,7 @@ class ProspectoScreen extends React.Component {
 			prospecto.telefone = telefone
 			prospecto.email = email
 			this.props.alterarProspectoNoAsyncStorage(prospecto)
-			this.props.navigation.navigate('Prospectos')
+			this.props.navigation.navigate('Mensagem')
 		}
 	}
 
@@ -147,7 +147,7 @@ class ProspectoScreen extends React.Component {
 								containerStyle={{ borderWidth: 1, borderColor: gray, borderRadius: 6, marginTop: 10, paddingHorizontal: 15 }}
 								inputContainerStyle={{ borderWidth: 0, borderColor: 'transparent' }}
 								underlineColorAndroid="transparent"
-								keyboardType='phone-pad'
+								keyboardType='number-pad'
 								keyboardAppearance='dark'
 								placeholder=""
 								placeholderTextColor={'#ddd'}
@@ -169,7 +169,7 @@ class ProspectoScreen extends React.Component {
 								containerStyle={{ borderWidth: 1, borderColor: gray, borderRadius: 6, marginTop: 10 }}
 								inputContainerStyle={{ borderWidth: 0, borderColor: 'transparent' }}
 								underlineColorAndroid="transparent"
-								keyboardType='phone-pad'
+								keyboardType='number-pad'
 								keyboardAppearance='dark'
 								placeholder=""
 								placeholderTextColor={'#ddd'}
@@ -206,7 +206,7 @@ class ProspectoScreen extends React.Component {
 						onSubmitEditing={() => this.ajudadorDeSubmissao()}
 					/>
 
-					<LOButton
+					<CPButton
 						title='Salvar'
 						OnPress={() => { this.ajudadorDeSubmissao() }}
 					/>
